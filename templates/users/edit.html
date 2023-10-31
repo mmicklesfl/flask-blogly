@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Edit {{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block title %}Edit {{ user.get_full_name() }}{% endblock %}
 
 {% block content %}
 
