@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>New Post</h1>
+  <form method="POST">
+    <input type="hidden" name="user_id" value="{{ user_id }}">
+    <div>
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <div>
+      <label for="content">Content:</label>
+      <textarea id="content" name="content" required></textarea>
+    </div>
+    <div>
+      <button type="submit">Add Post</button>
+      <a href="/posts">Cancel</a>
+    </div>
+  </form>
+{% endblock %}
