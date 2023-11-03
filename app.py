@@ -12,7 +12,6 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 db.init_app(app)
 
-# Ensure all tables are created when the app starts up
 with app.app_context():
     db.create_all()
     
