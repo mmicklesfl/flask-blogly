@@ -17,18 +17,16 @@ with app.app_context():
     
 @app.route('/')
 def home_redirect():
-    """Redirect to list of users."""
-    return redirect('/users')
+    recent_posts = Post.query.order_by(Post.created_at.desc()).limit(5).all()
+    return render_template('homepage.html', posts=recent_posts)
 
-@app.route('/users')
+@app.route('/users', endpoint='users_list')
 def users_index():
-    """Show all users."""
     users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('users/index.html', users=users)
 
 @app.route('/users/new', methods=["GET", "POST"])
 def users_new():
-    """Show an add form for users."""
     if request.method == "POST":
         new_user = User(
             first_name=request.form['first_name'],
@@ -42,14 +40,12 @@ def users_new():
 
 @app.route('/users/<int:user_id>')
 def users_profile(user_id):
-    """Show information about the given user."""
     user = User.query.get_or_404(user_id)
     return render_template('users/profile.html', user=user)
 
 
 @app.route('/users/<int:user_id>/edit', methods=["GET", "POST"])
 def users_edit(user_id):
-    """Show the edit page for a user."""
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
         user.first_name = request.form['first_name']
@@ -63,7 +59,6 @@ def users_edit(user_id):
 
 @app.route('/users/<int:user_id>/delete', methods=["POST"])
 def users_delete(user_id):
-    """Delete the user."""
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
@@ -93,13 +88,11 @@ def posts_new():
 
 @app.route('/posts/<int:post_id>')
 def posts_show(post_id):
-    """Show a post."""
     post = Post.query.get_or_404(post_id)
     return render_template('posts/show.html', post=post)
 
 @app.route('/posts/<int:post_id>/edit', methods=["GET", "POST"])
 def posts_edit(post_id):
-    """Edit a post."""
     post = Post.query.get_or_404(post_id)
     if request.method == "POST":
         post.title = request.form['title']
@@ -110,11 +103,14 @@ def posts_edit(post_id):
 
 @app.route('/posts/<int:post_id>/delete', methods=["POST"])
 def posts_delete(post_id):
-    """Delete a post."""
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
     db.session.commit()
     return redirect("/posts")
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -10,15 +10,16 @@ class User(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     image_url = db.Column(db.String(200), default='default_profile.jpg')
-    posts = db.relationship('Post', back_populates='user', lazy='dynamic')
+
+    posts = db.relationship('Post', back_populates='user', lazy='dynamic', cascade='all, delete-orphan')
 
     @hybrid_property
     def full_name(self):
-        return self.last_name + ', ' + self.first_name
+        return f"{self.last_name}, {self.first_name}"
 
     def get_full_name(self):
-        """Return the full name of the user in 'last, first' format."""
-        return f"{self.last_name}, {self.first_name}"
+        """Returns the full name of the user in 'last, first' format."""
+        return self.full_name
 
     def __repr__(self):
         return f"<User {self.id} {self.first_name} {self.last_name}>"
@@ -29,6 +30,10 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     user = db.relationship('User', back_populates='posts')
+
+    def __repr__(self):
+        return f"<Post {self.id} {self.title}>"
