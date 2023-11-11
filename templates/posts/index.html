@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Posts</title>
+</head>
+<body>
+    <h1>All Posts</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{{ url_for('posts_show', post_id=post.id) }}">{{ post.title }}</a>
+                <span>Tags: 
+                    {% for tag in post.tags %}
+                        <a href="{{ url_for('tags_show', tag_id=tag.id) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

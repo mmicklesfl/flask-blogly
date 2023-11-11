@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tags</title>
+</head>
+<body>
+    <h1>Tags</h1>
+    <a href="{{ url_for('tags_new') }}">Create New Tag</a>
+    <ul>
+        {% for tag in tags %}
+            <li><a href="{{ url_for('tags_show', tag_id=tag.id) }}">{{ tag.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('tags_new') }}">Add New Tag</a>
+</body>
+</html>
